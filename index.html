@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepu Siva Pvt Ltd | Precision Engineering in Motion</title>
+  <meta name="description" content="Leading metal fabrication, industrial roofing, solar mounting structures and structural engineering in Coimbatore, Tamil Nadu. Explore our capabilities in motion.">
+  <meta property="og:title" content="Deepu Siva Pvt Ltd | Precision Engineering in Motion">
+  <meta property="og:description" content="Scroll-driven cinematic showcase of our metal fabrication, roofing, solar structures and turnkey erection capabilities.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://deepusiva.com">
+  <link rel="canonical" href="https://deepusiva.com">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ============================
+       CSS Reset & Design Tokens
+       ============================ */
+    :root {
+      --bg-color: #0d0f12;
+      --card-bg: rgba(20, 24, 30, 0.7);
+      --accent-color: #ff6f00;
+      --accent-glow: rgba(255, 111, 0, 0.4);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================
+       Preloader
+       ============================ */
+    #preloader {
+      position: fixed; inset: 0;
+      background-color: var(--bg-color);
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      transition: opacity 0.8s cubic-bezier(0.77, 0, 0.175, 1), visibility 0.8s;
+    }
+
+    .loader-content {
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .loader-ring {
+      position: relative;
+      width: 160px; height: 160px;
+      margin-bottom: 24px;
+    }
+    .loader-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .loader-ring circle { fill: none; stroke-width: 4; }
+    .loader-ring .track { stroke: rgba(255, 255, 255, 0.05); }
+    .loader-ring .fill {
+      stroke: var(--accent-color);
+      stroke-dasharray: 440; stroke-dashoffset: 440;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.15s linear;
+      filter: drop-shadow(0 0 8px var(--accent-color));
+    }
+    .loader-percentage {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem; font-weight: 700;
+      color: var(--text-main);
+    }
+    .loader-title {
+      font-size: 1.25rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-main); margin-bottom: 8px;
+    }
+    .loader-subtitle {
+      font-size: 0.875rem; color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ============================
+       Scroll Sequence Section
+       — NO sticky, NO fixed height.
+       GSAP pin handles everything.
+       ============================ */
+    #sequence-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background-color: var(--bg-color);
+    }
+
+    #sequence-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: block;
+    }
+
+    /* ============================
+       Storytelling Overlay Cards
+       ============================ */
+    .slide-overlay {
+      position: absolute; inset: 0;
+      z-index: 2; pointer-events: none;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 2rem;
+    }
+    .story-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px; padding: 2.5rem;
+      max-width: 540px; width: 100%;
+      text-align: center;
+      opacity: 0; transform: translateY(30px);
+      position: absolute;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .story-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.25rem; font-weight: 700;
+      margin-bottom: 12px; line-height: 1.2;
+      color: #fff; letter-spacing: -0.02em;
+    }
+    .story-card h2 span {
+      background: linear-gradient(135deg, var(--accent-color), #ffa726);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .story-card p {
+      font-size: 1.05rem; line-height: 1.6; color: var(--text-muted);
+    }
+
+    /* ============================
+       Fixed Header
+       ============================ */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 1.5rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(13,15,18,0.8), transparent);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem; font-weight: 700;
+      letter-spacing: -0.03em; text-decoration: none;
+      color: #fff; display: flex; align-items: center; gap: 10px;
+    }
+    .logo span { color: var(--accent-color); }
+    .header-cta {
+      background: var(--accent-color); color: #fff;
+      text-decoration: none; font-size: 0.875rem; font-weight: 600;
+      padding: 0.6rem 1.25rem; border-radius: 8px;
+      transition: all 0.3s ease; letter-spacing: 0.02em;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .header-cta:hover {
+      background: #ffa726; transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    /* ============================
+       Hero Section
+       ============================ */
+    .hero-section {
+      height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 2rem;
+      position: relative;
+      background: radial-gradient(circle at center, rgba(31,40,51,0.2) 0%, var(--bg-color) 70%);
+    }
+    .hero-section h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800; line-height: 1.1;
+      margin-bottom: 1.5rem; letter-spacing: -0.03em;
+    }
+    .hero-section h1 span {
+      background: linear-gradient(135deg, #ffffff 40%, var(--text-muted));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-section p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-muted); max-width: 600px;
+      margin-bottom: 2.5rem; line-height: 1.6;
+    }
+    .scroll-indicator {
+      position: absolute; bottom: 2rem;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      color: var(--text-muted); font-size: 0.875rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      animation: pulse 2s infinite;
+    }
+    .scroll-indicator svg {
+      width: 24px; height: 24px;
+      stroke: var(--accent-color); fill: none; stroke-width: 2;
+    }
+
+    /* ============================
+       Footer
+       ============================ */
+    .footer-section {
+      padding: 6rem 2rem; background-color: #08090b;
+      border-top: 1px solid var(--border-color);
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+    }
+    .footer-content { max-width: 800px; width: 100%; }
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;
+    }
+    .footer-logo span { color: var(--accent-color); }
+    .footer-desc {
+      color: var(--text-muted); margin-bottom: 3rem;
+      font-size: 1.1rem; line-height: 1.6;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2.5rem; width: 100%; text-align: left;
+      margin-bottom: 4rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 4rem;
+    }
+    .footer-col h4 {
+      font-size: 1rem; text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 1.25rem; color: #fff;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.75rem; }
+    .footer-col ul li a {
+      color: var(--text-muted); text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-col ul li a:hover { color: var(--accent-color); }
+    .copyright { color: #4b5563; font-size: 0.875rem; }
+
+    /* ============================
+       Animations
+       ============================ */
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: translateY(0); }
+      50%      { opacity: 1;   transform: translateY(6px); }
+    }
+
+    /* ============================
+       Mobile
+       ============================ */
+    @media (max-width: 768px) {
+      .story-card { max-width: 90%; padding: 1.75rem; }
+      .story-card h2 { font-size: 1.75rem; }
+      .story-card p { font-size: 0.95rem; }
+      header { padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader-content">
+      <div class="loader-ring">
+        <svg viewBox="0 0 160 160">
+          <circle class="track" cx="80" cy="80" r="70"></circle>
+          <circle class="fill" id="progress-fill" cx="80" cy="80" r="70"></circle>
+        </svg>
+        <div class="loader-percentage" id="loader-percent">0%</div>
+      </div>
+      <div class="loader-title">DEEPU SIVA PVT LTD</div>
+      <div class="loader-subtitle" id="loader-status">Preloading assets for smooth playback...</div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <a href="https://deepusiva.com" class="logo">DEEPU SIVA <span>PVT LTD</span></a>
+    <a href="tel:+918489090666" class="header-cta">Call Now</a>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-section" id="hero">
+    <h1><span>Engineering Precision.</span><br>Structural Strength.</h1>
+    <p>Scroll down to explore our fully integrated metal fabrication, solar structure manufacturing, and turnkey erection capabilities in motion.</p>
+    <div class="scroll-indicator">
+      <span>Scroll to Begin</span>
+      <svg viewBox="0 0 24 24">
+        <path d="M7 13l5 5 5-5M12 6v12" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Scroll Animation Section (GSAP pins this — no CSS sticky needed) -->
+  <section id="sequence-container">
+    <canvas id="sequence-canvas"></canvas>
+
+    <div class="slide-overlay">
+      <div class="story-card" id="card-1">
+        <h2>Precision <span>Fabrication</span></h2>
+        <p>We deliver state-of-the-art custom metal fabrication for machinery, structural frames, and custom steel components. MS, SS, and aluminum built to precise industrial tolerances.</p>
+      </div>
+      <div class="story-card" id="card-2">
+        <h2>Industrial <span>Roofing</span></h2>
+        <p>Heavy-duty GI sheet roofing, insulated sandwich panels, and standing seam systems. Engineered to protect massive factories and logistics warehouses.</p>
+      </div>
+      <div class="story-card" id="card-3">
+        <h2>Solar <span>Structures</span></h2>
+        <p>Hot-dip galvanized, powder-coated mounting racks engineered for heavy wind loads. Powering industrial rooftops and commercial ground-mount solar arrays.</p>
+      </div>
+      <div class="story-card" id="card-4">
+        <h2>Turnkey <span>Erection</span></h2>
+        <p>From design draft to final on-site structural assembly. Our dedicated engineering and construction teams ensure high-speed, safety-compliant execution.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <section class="footer-section">
+    <div class="footer-content">
+      <div class="footer-logo">DEEPU SIVA <span>PVT LTD</span></div>
+      <p class="footer-desc">A premier structural engineering and metal fabrication company based in Coimbatore, Tamil Nadu. Built on a legacy of excellence since 2017.</p>
+
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="https://deepusiva.com#services">Metal Fabrication</a></li>
+            <li><a href="https://deepusiva.com#services">Industrial Roofing</a></li>
+            <li><a href="https://deepusiva.com#services">Solar Structures</a></li>
+            <li><a href="https://deepusiva.com#services">Structural Engineering</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="https://deepusiva.com#about">About Us</a></li>
+            <li><a href="https://deepusiva.com#projects">Recent Projects</a></li>
+            <li><a href="https://deepusiva.com/login.html">Client Portal</a></li>
+            <li><a href="https://deepusiva.com#contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Info</h4>
+          <ul>
+            <li><a href="tel:+918489090666">+91 84890 90666</a></li>
+            <li><a href="mailto:contact@deepusiva.com">contact@deepusiva.com</a></li>
+            <li><a href="https://deepusiva.com#contact">Coimbatore, Tamil Nadu</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="copyright">
+        © 2026 Deepu Siva Private Limited. All Rights Reserved.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================
+       Script: Preloader + GSAP Scroll Sequence
+       ============================ -->
+  <script>
+    // ── Configuration ──────────────────────────────────
+    const FRAME_PATH   = './frames/';
+    const FRAME_PREFIX = 'ezgif-frame-';
+    const TOTAL_FRAMES = 270;
+
+    const images   = [];
+    const sequence = { frame: 0 };
+
+    const canvas = document.getElementById('sequence-canvas');
+    const ctx    = canvas.getContext('2d');
+
+    // Cache current DPR to avoid recalculating every frame
+    let currentDPR = window.devicePixelRatio || 1;
+
+    // ── 1. Load first frame instantly as placeholder ──
+    const firstFrame = new Image();
+    firstFrame.src = `${FRAME_PATH}${FRAME_PREFIX}001.jpg`;
+    firstFrame.onload = () => {
+      images[0] = firstFrame;
+      sizeCanvas();
+      renderFrame();
+      preloadRemainingImages();
+    };
+    firstFrame.onerror = () => preloadRemainingImages();
+
+    // ── 2. Preload all remaining frames ───────────────
+    function preloadRemainingImages() {
+      let loadedCount = 1;
+      const progressFill  = document.getElementById('progress-fill');
+      const loaderPercent = document.getElementById('loader-percent');
+      const loaderStatus  = document.getElementById('loader-status');
+      const circumference = 2 * Math.PI * 70;
+
+      function updateLoader(pct) {
+        progressFill.style.strokeDashoffset = circumference - (pct * circumference);
+        loaderPercent.textContent = Math.round(pct * 100) + '%';
+        if (pct < 0.4)      loaderStatus.textContent = 'Loading structural frames...';
+        else if (pct < 0.8) loaderStatus.textContent = 'Optimizing render sequence...';
+        else                loaderStatus.textContent = 'Ready for playback.';
+      }
+
+      for (let i = 2; i <= TOTAL_FRAMES; i++) {
+        const img = new Image();
+        const idx = String(i).padStart(3, '0');
+        img.src = `${FRAME_PATH}${FRAME_PREFIX}${idx}.jpg`;
+
+        img.onload = () => {
+          images[i - 1] = img;
+          loadedCount++;
+          updateLoader(loadedCount / TOTAL_FRAMES);
+          if (loadedCount === TOTAL_FRAMES) startAnimation();
+        };
+
+        img.onerror = () => {
+          console.warn(`Frame ${idx} failed`);
+          images[i - 1] = images[i - 2] || firstFrame;
+          loadedCount++;
+          updateLoader(loadedCount / TOTAL_FRAMES);
+          if (loadedCount === TOTAL_FRAMES) startAnimation();
+        };
+      }
+    }
+
+    // ── 3. Canvas sizing ──────────────────────────────
+    //    Sets the canvas pixel buffer to match the viewport
+    //    at full device-pixel-ratio for sharpness.
+    //    Does NOT call ctx.scale — we handle DPR in renderFrame
+    //    via setTransform so it never accumulates.
+    function sizeCanvas() {
+      currentDPR = window.devicePixelRatio || 1;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width  = w * currentDPR;
+      canvas.height = h * currentDPR;
+      canvas.style.width  = w + 'px';
+      canvas.style.height = h + 'px';
+    }
+
+    // ── 4. Render current frame ───────────────────────
+    //    Uses setTransform to RESET the canvas transform
+    //    every single call — prevents any scale accumulation.
+    function renderFrame() {
+      const frameIndex = Math.round(sequence.frame);
+
+      // Find the image — with nearest-neighbour fallback
+      let img = images[frameIndex];
+      if (!img) {
+        for (let d = 1; d < TOTAL_FRAMES; d++) {
+          if (images[frameIndex - d]) { img = images[frameIndex - d]; break; }
+          if (images[frameIndex + d]) { img = images[frameIndex + d]; break; }
+        }
+      }
+      if (!img || !img.complete || img.naturalWidth === 0) return;
+
+      // Reset transform to identity scaled by DPR (never accumulates)
+      ctx.setTransform(currentDPR, 0, 0, currentDPR, 0, 0);
+
+      const cw = window.innerWidth;
+      const ch = window.innerHeight;
+
+      // Clear the full canvas (in CSS-pixel space, scaled by DPR)
+      ctx.clearRect(0, 0, cw, ch);
+
+      // "Cover" fit: scale image to fill the viewport
+      const ir = img.naturalWidth / img.naturalHeight;
+      const cr = cw / ch;
+
+      let dw, dh, ox, oy;
+      if (cr > ir) {
+        // viewport is wider than image — match width, crop top/bottom
+        dw = cw;
+        dh = cw / ir;
+        ox = 0;
+        oy = (ch - dh) / 2;
+      } else {
+        // viewport is taller than image — match height, crop left/right
+        dw = ch * ir;
+        dh = ch;
+        ox = (cw - dw) / 2;
+        oy = 0;
+      }
+
+      ctx.drawImage(img, ox, oy, dw, dh);
+    }
+
+    // Resize handler — re-size buffer then re-draw
+    window.addEventListener('resize', () => {
+      sizeCanvas();
+      renderFrame();
+    });
+
+    // ── 5. GSAP ScrollTrigger animation ───────────────
+    function startAnimation() {
+      // Fade out preloader
+      const preloader = document.getElementById('preloader');
+      preloader.style.opacity = '0';
+      preloader.style.visibility = 'hidden';
+      // Remove preloader from DOM after transition
+      setTimeout(() => preloader.remove(), 900);
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Pin the sequence section and scrub through frames
+      // end: "+=300%" means the user scrolls 3× the viewport height
+      // to play through all 270 frames.
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#sequence-container',
+          pin: true,             // GSAP pins it — no CSS sticky needed
+          anticipatePin: 1,      // Prevents visual jump when pinning starts
+          start: 'top top',
+          end: '+=300%',         // 3 viewport-heights of scroll distance
+          scrub: 1,              // Smooth scrub (1 second lag)
+          onUpdate: () => renderFrame()
+        }
+      });
+
+      // Animate frame playhead 0 → 269
+      tl.to(sequence, {
+        frame: TOTAL_FRAMES - 1,
+        snap: 'frame',
+        ease: 'none',
+        duration: 1
+      }, 0);
+
+      // Storytelling cards: fade in / out at scroll milestones
+      const cards = [
+        { id: '#card-1', fadeIn: 0.05, fadeOut: 0.22 },
+        { id: '#card-2', fadeIn: 0.30, fadeOut: 0.47 },
+        { id: '#card-3', fadeIn: 0.55, fadeOut: 0.72 },
+        { id: '#card-4', fadeIn: 0.80, fadeOut: 0.95 },
+      ];
+      cards.forEach(c => {
+        gsap.set(c.id, { opacity: 0, y: 40 });
+        tl.to(c.id, { opacity: 1, y: 0,   duration: 0.08, ease: 'power2.out' }, c.fadeIn);
+        tl.to(c.id, { opacity: 0, y: -40,  duration: 0.08, ease: 'power2.in'  }, c.fadeOut);
+      });
+
+      // Initial draw
+      sizeCanvas();
+      renderFrame();
+    }
+  </script>
+</body>
+</html>
